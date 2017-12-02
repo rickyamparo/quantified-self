@@ -406,6 +406,7 @@
 
 	var $ = __webpack_require__(6);
 	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/meals';
+	var totalz = 0;
 
 	var getAllMeals = function getAllMeals() {
 	  fetch(url, { method: 'GET' }).then(function (response) {
@@ -419,6 +420,7 @@
 	      meal.forEach(function (food) {
 	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
 	        totals += food.calories;
+	        totalz += food.calories;
 	      });
 	      $('.' + mealName + '-total').append('' + totals);
 	      remainingCal(mealName, totals);
@@ -426,9 +428,19 @@
 	  }).catch(function (error) {
 	    console.log({ error: error });;
 	  });
+	  getMealTotals();
 	};
 
-	var getMealTotals = function getMealTotals() {};
+	var getMealTotals = function getMealTotals() {
+	  var sum = 0;
+	  $('.total').each(function () {
+	    console.log(totalz);
+	    console.log(this.innerHTML);
+	    debugger;
+	    // sum += parseFloat($(this).innerHTML()); // Or this.innerHTML, this.innerText
+	    // console.log(sum);
+	  });
+	};
 
 	var remainingCal = function remainingCal(id, totalCal) {
 	  if (id === 'breakfast') {
@@ -436,19 +448,27 @@
 	    $('.' + id + '-remaining').append(remaining);
 	  } else if (id === 'dinner') {
 	    var _remaining = 800 - totalCal;
-	    $('.' + id + '-remaining').append('' + _remaining);
+	    $('.' + id + '-remaining').append(_remaining);
 	  } else if (id === 'lunch') {
 	    var _remaining2 = 600 - totalCal;
-	    $('.' + id + '-remaining').append('' + _remaining2);
+	    $('.' + id + '-remaining').append(_remaining2);
 	  } else if (id === 'snack') {
 	    var _remaining3 = 200 - totalCal;
-	    $('.' + id + '-remaining').append('' + _remaining3);
+	    $('.' + id + '-remaining').append(_remaining3);
 	  } else {
 	    console.log(id + ' table not found');
 	  }
 	};
+
+	$(document).ready(function () {
+	  setTimeout(function () {
+	    getAllMeals();
+	  }, 200);
+	});
+	$(window).on('load', function () {
+	  getMealTotals();
+	});
 	module.exports = getAllMeals;
-	getAllMeals();
 
 /***/ }),
 /* 6 */
