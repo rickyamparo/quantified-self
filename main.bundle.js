@@ -48,6 +48,7 @@
 
 	__webpack_require__(1);
 	__webpack_require__(5);
+	__webpack_require__(7);
 
 /***/ }),
 /* 1 */
@@ -10684,6 +10685,42 @@
 	return jQuery;
 	} );
 
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
+	var foodResponse = __webpack_require__(8);
+
+	$(document).ready(function () {
+	  $.ajax({
+	    type: "GET",
+	    url: "https://serene-sea-75169.herokuapp.com/api/v1/foods"
+	  }).then(foodResponse.appendFoods).catch(foodResponse.errorLog);
+	});
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
+
+	var appendFoods = function appendFoods(posts) {
+	  posts.forEach(function (post) {
+	    $('table#food-table').append('<tr><td>' + post.name + '</td> <td>' + post.calories + '</td></tr>');
+	  });
+	};
+
+	var errorLog = function errorLog(error) {
+	  console.error(error);
+	};
+
+	module.exports = { errorLog: errorLog, appendFoods: appendFoods };
 
 /***/ })
 /******/ ]);
