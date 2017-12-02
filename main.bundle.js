@@ -401,21 +401,45 @@
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	var $ = __webpack_require__(6);
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/meals';
 
-	$.getJSON("https://serene-sea-75169.herokuapp.com/api/v1/meals").then(function (meals) {
-	    meals.forEach(function (meal) {
-	        // console.log(meal.foods)
-	        var things = meal.foods;
-	        things.forEach(function (thingy) {
-	            console.log(thingy.name);
-	        });
+	// $.getJSON("https://serene-sea-75169.herokuapp.com/api/v1/meals")
+	//     .then(function(meals){
+	//         meals.forEach(function(meal){
+	//             // console.log(meal.foods)
+	//             var things = meal.foods
+	//             things.forEach(function(thingy) {
+	//               console.log(thingy.name)
+	//             })
+	//         })
+	//     })
+	//     .catch(function(error) {
+	//         // console.error(error)
+	//     })
+
+
+	var getAllMeals = function getAllMeals() {
+	  fetch(url, { method: 'GET' }).then(function (response) {
+	    return response.json();
+	  }).then(function (responseArray) {
+	    responseArray.forEach(function (meals) {
+	      var meal = meals.foods;
+	      var table = $('.' + meals.name.toLowerCase() + '-table');
+	      debugger;
+	      meal.forEach(function (food) {
+	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
+	      });
 	    });
-	}).catch(function (error) {
-	    // console.error(error)
-	});
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  });
+	};
+
+	module.exports = getAllMeals;
+	getAllMeals();
 
 /***/ }),
 /* 6 */
