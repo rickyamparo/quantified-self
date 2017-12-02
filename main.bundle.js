@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "table {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 50%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Arial;\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
 
@@ -414,7 +414,6 @@
 	    responseArray.forEach(function (meals) {
 	      var meal = meals.foods;
 	      var table = $('.' + meals.name.toLowerCase() + '-table');
-	      debugger;
 	      meal.forEach(function (food) {
 	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
 	      });
