@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: Arial;\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
 
@@ -413,16 +413,40 @@
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
 	      var meal = meals.foods;
-	      var table = $('.' + meals.name.toLowerCase() + '-table');
+	      var mealName = meals.name.toLowerCase();
+	      var table = $('.' + mealName + '-table');
+	      var totals = 0;
 	      meal.forEach(function (food) {
 	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
+	        totals += food.calories;
 	      });
+	      $('.' + mealName + '-total').append('' + totals);
+	      remainingCal(mealName, totals);
 	    });
 	  }).catch(function (error) {
 	    console.log({ error: error });;
 	  });
 	};
 
+	var getMealTotals = function getMealTotals() {};
+
+	var remainingCal = function remainingCal(id, totalCal) {
+	  if (id === 'breakfast') {
+	    var remaining = 400 - totalCal;
+	    $('.' + id + '-remaining').append(remaining);
+	  } else if (id === 'dinner') {
+	    var _remaining = 800 - totalCal;
+	    $('.' + id + '-remaining').append('' + _remaining);
+	  } else if (id === 'lunch') {
+	    var _remaining2 = 600 - totalCal;
+	    $('.' + id + '-remaining').append('' + _remaining2);
+	  } else if (id === 'snack') {
+	    var _remaining3 = 200 - totalCal;
+	    $('.' + id + '-remaining').append('' + _remaining3);
+	  } else {
+	    console.log(id + ' table not found');
+	  }
+	};
 	module.exports = getAllMeals;
 	getAllMeals();
 
