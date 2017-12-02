@@ -1,0 +1,36 @@
+* {
+  font-family: "Raleway Thin";
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th {
+  background-color: darkgrey;
+  text-align: left;
+}
+
+.calories {
+  text-align: right;
+}
+
+.totals {
+  font-weight: bold;
+  background-color: darkgrey;
+}
+
+.column {
+    float: left;
+    width: 20%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
