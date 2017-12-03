@@ -10697,7 +10697,7 @@
 	$(document).ready(function () {
 	  foodRequest.getFoods();
 
-	  $('div.foods').submit(function (event) {
+	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
 	    var calories = $('input[name=food-calories]').val();
 	    if (name === "") {
@@ -10708,6 +10708,15 @@
 	      foodRequest.postFood(name, calories);
 	    }
 	    event.preventDefault();
+	  });
+
+	  // $('.food-row').click(function(){
+	  //   alert("You clicked on something")
+	  // })
+	  $('tbody#food-table').on("click", function (e) {
+	    if (event.target.nodeName == "I") {
+	      alert("you clicked on delete");
+	    }
 	  });
 	});
 
@@ -10734,7 +10743,7 @@
 	      "calories": calories
 	    }
 	  }).then(function (response) {
-	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td></tr> <tr><td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
@@ -10751,7 +10760,7 @@
 	var appendFoods = function appendFoods(posts) {
 	  posts.reverse();
 	  posts.forEach(function (post) {
-	    $('tbody#food-table').append('<tr><td>' + post.name + '</td> <td>' + post.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="food-row"><td>' + post.name + '</td> <td>' + post.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
