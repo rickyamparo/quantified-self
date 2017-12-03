@@ -431,24 +431,29 @@
 	  });
 	};
 
+	var colorizeCalories = function colorizeCalories(calories, total, id) {
+	  var remaining = total - calories;
+	  if (remaining < 0) {
+	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
+	  } else {
+	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
+	  }
+	};
+
 	var dailyCalories = function dailyCalories(calories) {
 	  $('.daily-total').append(calories);
-	  $('.daily-remaining').append('' + (2000 - calories));
+	  colorizeCalories(calories, 2000, 'daily');
 	};
 
 	var remainingCal = function remainingCal(id, totalCal) {
 	  if (id === 'breakfast') {
-	    var remaining = 400 - totalCal;
-	    $('.' + id + '-remaining').append(remaining);
+	    colorizeCalories(totalCal, 400, id);
 	  } else if (id === 'dinner') {
-	    var _remaining = 800 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining);
+	    colorizeCalories(totalCal, 800, id);
 	  } else if (id === 'lunch') {
-	    var _remaining2 = 600 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining2);
+	    colorizeCalories(totalCal, 600, id);
 	  } else if (id === 'snack') {
-	    var _remaining3 = 200 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining3);
+	    colorizeCalories(totalCal, 200, id);
 	  } else {
 	    console.log(id + ' table not found');
 	  }
