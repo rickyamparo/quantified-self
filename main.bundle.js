@@ -10709,17 +10709,7 @@
 	    } else if (calories === "") {
 	      alert("Please enter calories");
 	    } else {
-	      var postFood = function postFood(name, calories) {
-	        $.post(url, {
-	          "food": {
-	            "name": name,
-	            "calories": calories
-	          }
-	        }).then(function (response) {
-	          $('table#food-table').append('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td></tr>');
-	        });
-	      };
-	      postFood(name, calories);
+	      foodRequest.postFood(name, calories);
 	    }
 	    event.preventDefault();
 	  });
