@@ -34,3 +34,7 @@ th {
     display: table;
     clear: both;
 }
+
+.fa-minus-circle {
+  color: red
+}
