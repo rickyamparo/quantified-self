@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
 
@@ -431,24 +431,29 @@
 	  });
 	};
 
+	var colorizeCalories = function colorizeCalories(calories, total, id) {
+	  var remaining = total - calories;
+	  if (remaining < 0) {
+	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
+	  } else {
+	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
+	  }
+	};
+
 	var dailyCalories = function dailyCalories(calories) {
 	  $('.daily-total').append(calories);
-	  $('.daily-remaining').append('' + (2000 - calories));
+	  colorizeCalories(calories, 2000, 'daily');
 	};
 
 	var remainingCal = function remainingCal(id, totalCal) {
 	  if (id === 'breakfast') {
-	    var remaining = 400 - totalCal;
-	    $('.' + id + '-remaining').append(remaining);
+	    colorizeCalories(totalCal, 400, id);
 	  } else if (id === 'dinner') {
-	    var _remaining = 800 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining);
+	    colorizeCalories(totalCal, 800, id);
 	  } else if (id === 'lunch') {
-	    var _remaining2 = 600 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining2);
+	    colorizeCalories(totalCal, 600, id);
 	  } else if (id === 'snack') {
-	    var _remaining3 = 200 - totalCal;
-	    $('.' + id + '-remaining').append(_remaining3);
+	    colorizeCalories(totalCal, 200, id);
 	  } else {
 	    console.log(id + ' table not found');
 	  }
