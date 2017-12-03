@@ -86,6 +86,7 @@
 
 	// module
 	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.fa-minus-circle {\n  color: red\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
 
@@ -405,26 +406,67 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/meals';
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var getAllMeals = function getAllMeals() {
-	  fetch(url, { method: 'GET' }).then(function (response) {
+	  var dailyCal = 0;
+	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
 	      var meal = meals.foods;
-	      var table = $('.' + meals.name.toLowerCase() + '-table');
+	      var mealName = meals.name.toLowerCase();
+	      var table = $('.' + mealName + '-table');
+	      var totals = 0;
 	      meal.forEach(function (food) {
 	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
+	        totals += food.calories;
+	        dailyCal += food.calories;
 	      });
+	      $('.' + mealName + '-total').append('' + totals);
+	      remainingCal(mealName, totals);
 	    });
+	    dailyCalories(dailyCal);
 	  }).catch(function (error) {
-	    console.log({ error: error });;
+	    console.log({ error: error });
 	  });
 	};
 
+	var colorizeCalories = function colorizeCalories(calories, total, id) {
+	  var remaining = total - calories;
+	  if (remaining < 0) {
+	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
+	  } else {
+	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
+	  }
+	};
+
+	var dailyCalories = function dailyCalories(calories) {
+	  $('.daily-total').append(calories);
+	  colorizeCalories(calories, 2000, 'daily');
+	};
+
+	var remainingCal = function remainingCal(id, totalCal) {
+	  if (id === 'breakfast') {
+	    colorizeCalories(totalCal, 400, id);
+	  } else if (id === 'dinner') {
+	    colorizeCalories(totalCal, 800, id);
+	  } else if (id === 'lunch') {
+	    colorizeCalories(totalCal, 600, id);
+	  } else if (id === 'snack') {
+	    colorizeCalories(totalCal, 200, id);
+	  } else {
+	    console.log(id + ' table not found');
+	  }
+	};
+
+	$(document).ready(function () {
+	  setTimeout(function () {
+	    getAllMeals();
+	  }, 200);
+	});
+
 	module.exports = getAllMeals;
-	getAllMeals();
 
 /***/ }),
 /* 6 */
