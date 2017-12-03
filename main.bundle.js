@@ -405,12 +405,11 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/meals';
-	var totalz = 0;
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var getAllMeals = function getAllMeals() {
 	  var dailyCal = 0;
-	  fetch(url, { method: 'GET' }).then(function (response) {
+	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
@@ -435,8 +434,6 @@
 	var dailyCalories = function dailyCalories(calories) {
 	  $('.daily-total').append(calories);
 	  $('.daily-remaining').append('' + (2000 - calories));
-	  console.log(calories);
-	  console.log($('.daily-goal').val());
 	};
 
 	var remainingCal = function remainingCal(id, totalCal) {
@@ -457,25 +454,12 @@
 	  }
 	};
 
-	var getMealTotals = function getMealTotals() {
-	  var sum = 0;
-	  $('.total').each(function () {
-	    console.log(totalz);
-	    console.log(this.innerHTML);
-	    debugger;
-	    // sum += parseFloat($(this).innerHTML()); // Or this.innerHTML, this.innerText
-	    // console.log(sum);
-	  });
-	};
-
 	$(document).ready(function () {
 	  setTimeout(function () {
 	    getAllMeals();
 	  }, 200);
 	});
-	// $(window).on('load', function() {
-	//     getMealTotals();
-	// });
+
 	module.exports = getAllMeals;
 
 /***/ }),
