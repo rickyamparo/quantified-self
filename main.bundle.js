@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: Arial;\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
 
@@ -10693,12 +10693,36 @@
 
 	var $ = __webpack_require__(6);
 	var foodResponse = __webpack_require__(8);
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/foods';
 
 	$(document).ready(function () {
 	  $.ajax({
 	    type: "GET",
-	    url: "https://serene-sea-75169.herokuapp.com/api/v1/foods"
+	    url: url
 	  }).then(foodResponse.appendFoods).catch(foodResponse.errorLog);
+
+	  $('div.foods').submit(function (event) {
+	    var name = $('input[name=food-name]').val();
+	    var calories = $('input[name=food-calories]').val();
+	    if (name === "") {
+	      alert("Please enter food name");
+	    } else if (calories === "") {
+	      alert("Please enter calories");
+	    } else {
+	      var postFood = function postFood(name, calories) {
+	        $.post(url, {
+	          "food": {
+	            "name": name,
+	            "calories": calories
+	          }
+	        }).then(function (response) {
+	          $('table#food-table').append('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td></tr>');
+	        });
+	      };
+	      postFood(name, calories);
+	    }
+	    event.preventDefault();
+	  });
 	});
 
 /***/ }),
