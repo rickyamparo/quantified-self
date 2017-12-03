@@ -85,6 +85,7 @@
 
 
 	// module
+	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.fa-minus-circle {\n  color: red\n}\n", ""]);
 	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
 	// exports
@@ -10733,13 +10734,42 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var foodResponse = __webpack_require__(8);
+	var foodRequest = __webpack_require__(8);
 
 	$(document).ready(function () {
-	  $.ajax({
-	    type: "GET",
-	    url: "https://serene-sea-75169.herokuapp.com/api/v1/foods"
-	  }).then(foodResponse.appendFoods).catch(foodResponse.errorLog);
+	  foodRequest.getFoods();
+
+	  $('form.add-food').submit(function (event) {
+	    var name = $('input[name=food-name]').val();
+	    var calories = $('input[name=food-calories]').val();
+	    if (name === "") {
+	      alert("Please enter food name");
+	    } else if (calories === "") {
+	      alert("Please enter calories");
+	    } else {
+	      foodRequest.postFood(name, calories);
+	    }
+	    event.preventDefault();
+	  });
+
+	  // $('.food-row').click(function(){
+	  //   alert("You clicked on something")
+	  // })
+	  $('tbody#food-table').on("click", function (e) {
+	    if (event.target.nodeName == "I") {
+	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	      event.target.parentElement.parentElement.remove();
+	      var foodUrl = 'http://serene-sea-75169.herokuapp.com/api/v1/foods/' + foodId;
+	      var deleteFood = function deleteFood(item) {
+	        fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
+	          return console.log(response.json());
+	        }).catch(function (error) {
+	          console.log({ error: error });;
+	        });
+	      };
+	      deleteFood(foodId);
+	    }
+	  });
 	});
 
 /***/ }),
@@ -10749,10 +10779,40 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
+	var foodResponse = __webpack_require__(9);
+
+	var getFoods = function getFoods() {
+	  $.ajax({
+	    type: "GET",
+	    url: 'http://serene-sea-75169.herokuapp.com/api/v1/foods'
+	  }).then(foodResponse.appendFoods).catch(foodResponse.errorLog);
+	};
+
+	var postFood = function postFood(name, calories) {
+	  $.post('http://serene-sea-75169.herokuapp.com/api/v1/foods', {
+	    "food": {
+	      "name": name,
+	      "calories": calories
+	    }
+	  }).then(function (response) {
+	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	  });
+	};
+
+	module.exports = { postFood: postFood, getFoods: getFoods };
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
 
 	var appendFoods = function appendFoods(posts) {
+	  posts.reverse();
 	  posts.forEach(function (post) {
-	    $('table#food-table').append('<tr><td>' + post.name + '</td> <td>' + post.calories + '</td></tr>');
+	    $('tbody#food-table').append('<tr class="food-row' + post.id + '"><td>' + post.name + '</td> <td>' + post.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
