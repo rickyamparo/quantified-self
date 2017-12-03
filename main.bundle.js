@@ -10715,7 +10715,17 @@
 	  // })
 	  $('tbody#food-table').on("click", function (e) {
 	    if (event.target.nodeName == "I") {
-	      alert("you clicked on delete");
+	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	      event.target.parentElement.parentElement.remove();
+	      var foodUrl = 'http://serene-sea-75169.herokuapp.com/api/v1/foods/' + foodId;
+	      var deleteFood = function deleteFood(item) {
+	        fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
+	          return console.log(response.json());
+	        }).catch(function (error) {
+	          console.log({ error: error });;
+	        });
+	      };
+	      deleteFood(foodId);
 	    }
 	  });
 	});
@@ -10760,7 +10770,7 @@
 	var appendFoods = function appendFoods(posts) {
 	  posts.reverse();
 	  posts.forEach(function (post) {
-	    $('tbody#food-table').append('<tr class="food-row"><td>' + post.name + '</td> <td>' + post.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="food-row' + post.id + '"><td>' + post.name + '</td> <td>' + post.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
