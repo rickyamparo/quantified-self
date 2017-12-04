@@ -405,7 +405,8 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+	// const url = 'http://serene-sea-75169.herokuapp.com/api/v1/'
+	var url = "http://localhost:3000/api/v1/";
 
 	var getAllMeals = function getAllMeals() {
 	  var dailyCal = 0;
@@ -426,6 +427,24 @@
 	      remainingCal(mealName, totals);
 	    });
 	    dailyCalories(dailyCal);
+	  }).catch(function (error) {
+	    console.log({ error: error });
+	  });
+	};
+
+	var getFoodInMeals = function getFoodInMeals(id) {
+	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
+	    return response.json();
+	  }).then(function (responseArray) {
+	    responseArray.forEach(function (meals) {
+	      var meal = meals.foods;
+	      var mealId = meals.id;
+	      meal.forEach(function (food) {
+	        if (food.id === id) {
+	          console.log(mealId + ' + ' + id);
+	        }
+	      });
+	    });
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  });
@@ -10734,7 +10753,8 @@
 
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(8);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+	var url = "http://localhost:3000/api/v1/";
+	var url_remote = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var deleteFood = function deleteFood(item, foodUrl) {
 	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
