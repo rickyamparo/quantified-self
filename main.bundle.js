@@ -10767,12 +10767,10 @@
 	    return response.json();
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
-	      debugger;
 	      var meal = meals.foods;
 	      var mealId = meals.id;
 	      meal.forEach(function (food) {
-	        if (food.id === id) {
-	          debugger;
+	        if (food.id == id) {
 	          var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
 	          console.log(mealUrl);
 	          deleteFood(id, mealUrl);
@@ -10783,7 +10781,9 @@
 	    console.log({ error: error });
 	  });
 	  var foodUrl = url + 'foods/' + id;
-	  // deleteFood(id, foodUrl)
+	  setTimeout(function () {
+	    deleteFood(id, foodUrl);
+	  }, 200);
 	};
 
 	$(document).ready(function () {
