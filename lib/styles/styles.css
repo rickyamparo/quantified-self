@@ -38,6 +38,7 @@ th {
 .row {
   padding-left: 20px;
 }
+
 .row:after {
     content: "";
     display: table;
