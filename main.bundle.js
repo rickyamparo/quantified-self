@@ -85,8 +85,8 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: \"Raleway Thin\";\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 20%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.fa-minus-circle {\n  color: red\n}\n", ""]);
-	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.fa-minus-circle {\n  color: red\n}\n", ""]);
 
 	// exports
 
@@ -427,6 +427,24 @@
 	      remainingCal(mealName, totals);
 	    });
 	    dailyCalories(dailyCal);
+	  }).catch(function (error) {
+	    console.log({ error: error });
+	  });
+	};
+
+	var getFoodInMeals = function getFoodInMeals(id) {
+	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
+	    return response.json();
+	  }).then(function (responseArray) {
+	    responseArray.forEach(function (meals) {
+	      var meal = meals.foods;
+	      var mealId = meals.id;
+	      meal.forEach(function (food) {
+	        if (food.id === id) {
+	          console.log(mealId + ' + ' + id);
+	        }
+	      });
+	    });
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  });
@@ -10736,6 +10754,41 @@
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(8);
 
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+
+	var deleteFood = function deleteFood(item, foodUrl) {
+	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  });
+	};
+
+	var deleteFoodInMeals = function deleteFoodInMeals(id) {
+	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
+	    return response.json();
+	  }).then(function (responseArray) {
+	    responseArray.forEach(function (meals) {
+	      var meal = meals.foods;
+	      var mealId = meals.id;
+	      meal.forEach(function (food) {
+	        if (food.id == id) {
+	          var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
+	          console.log(mealUrl);
+	          deleteFood(id, mealUrl);
+	        }
+	      });
+	    });
+	  }).catch(function (error) {
+	    console.log({ error: error });
+	  });
+	  var foodUrl = url + 'foods/' + id;
+	  setTimeout(function () {
+	    deleteFood(id, foodUrl);
+	  }, 200);
+	};
+
+
 	$(document).ready(function () {
 	  foodRequest.getFoods();
 
@@ -10759,15 +10812,9 @@
 	    if (event.target.nodeName == "I") {
 	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
 	      event.target.parentElement.parentElement.remove();
-	      var foodUrl = 'http://serene-sea-75169.herokuapp.com/api/v1/foods/' + foodId;
-	      var deleteFood = function deleteFood(item) {
-	        fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
-	          return console.log(response.json());
-	        }).catch(function (error) {
-	          console.log({ error: error });;
-	        });
-	      };
-	      deleteFood(foodId);
+
+	      var foodUrl = url + 'foods/' + foodId;
+	      deleteFoodInMeals(foodId);
 	    }
 	  });
 	});
