@@ -87,6 +87,7 @@
 	// module
 	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
 
+
 	// exports
 
 
@@ -10752,7 +10753,9 @@
 
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(8);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+
+	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
+
 
 	var deleteFood = function deleteFood(item, foodUrl) {
 	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
@@ -10826,6 +10829,8 @@
 	      setTimeout(function () {
 	        deleteFood(foodId, foodUrl);
 	      }, 300);
+	    } else {
+	      debugger;
 	    }
 	  });
 	});
