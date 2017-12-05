@@ -48,7 +48,7 @@
 
 	__webpack_require__(1);
 	__webpack_require__(5);
-	__webpack_require__(7);
+	__webpack_require__(8);
 
 /***/ }),
 /* 1 */
@@ -406,84 +406,42 @@
 
 	var $ = __webpack_require__(6);
 	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+	var mealResponse = __webpack_require__(7);
 
-	var getAllMeals = function getAllMeals() {
-	  var dailyCal = 0;
-	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
+	var requestMeals = function requestMeals(method) {
+	  fetch(url + 'meals', {
+	    method: 'GET'
+	  }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
-	    responseArray.forEach(function (meals) {
-	      var meal = meals.foods;
-	      var mealName = meals.name.toLowerCase();
-	      var table = $('.' + mealName + '-table');
-	      var totals = 0;
-	      meal.forEach(function (food) {
-	        table.append('\n            <tr><td>' + food.name + '</td>\n            <td class="calories">' + food.calories + '</td></tr>');
-	        totals += food.calories;
-	        dailyCal += food.calories;
-	      });
-	      $('.' + mealName + '-total').append('' + totals);
-	      remainingCal(mealName, totals);
-	    });
-	    dailyCalories(dailyCal);
+	    method(responseArray);
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  });
-	};
-
-	var getFoodInMeals = function getFoodInMeals(id) {
-	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
-	    return response.json();
-	  }).then(function (responseArray) {
-	    responseArray.forEach(function (meals) {
-	      var meal = meals.foods;
-	      var mealId = meals.id;
-	      meal.forEach(function (food) {
-	        if (food.id === id) {
-	          console.log(mealId + ' + ' + id);
-	        }
-	      });
-	    });
-	  }).catch(function (error) {
-	    console.log({ error: error });
-	  });
-	};
-
-	var colorizeCalories = function colorizeCalories(calories, total, id) {
-	  var remaining = total - calories;
-	  if (remaining < 0) {
-	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
-	  } else {
-	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
-	  }
-	};
-
-	var dailyCalories = function dailyCalories(calories) {
-	  $('.daily-total').append(calories);
-	  colorizeCalories(calories, 2000, 'daily');
-	};
-
-	var remainingCal = function remainingCal(id, totalCal) {
-	  if (id === 'breakfast') {
-	    colorizeCalories(totalCal, 400, id);
-	  } else if (id === 'dinner') {
-	    colorizeCalories(totalCal, 800, id);
-	  } else if (id === 'lunch') {
-	    colorizeCalories(totalCal, 600, id);
-	  } else if (id === 'snack') {
-	    colorizeCalories(totalCal, 200, id);
-	  } else {
-	    console.log(id + ' table not found');
-	  }
 	};
 
 	$(document).ready(function () {
 	  setTimeout(function () {
-	    getAllMeals();
+	    requestMeals(mealResponse.getAllMeals);
 	  }, 200);
 	});
 
-	module.exports = getAllMeals;
+	module.exports = requestMeals;
+
+	// const traverseFoodInMeals = (id, method) => {
+	//   fetch(`${url}meals`, {method: 'GET'})
+	//     .then( response => response.json())
+	//     .then( responseArray => {
+	//       responseArray.forEach( meals => {
+	//
+	//         deleteMealFoods(meals, id)
+	//         method(meals, id)
+	//
+	//       })
+	//     })
+	//     .catch( error => {console.log( { error })
+	//     })
+	// }
 
 /***/ }),
 /* 6 */
@@ -10751,7 +10709,72 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var foodRequest = __webpack_require__(8);
+
+	var getAllMeals = function getAllMeals(responseArray) {
+	  var dailyCal = 0;
+	  responseArray.forEach(function (meals) {
+	    var calories = appendMeals(meals);
+	    dailyCal += calories;
+	  });
+	  dailyCalories(dailyCal);
+	};
+
+	var appendMeals = function appendMeals(meals) {
+	  var mealName = meals.name.toLowerCase();
+	  var table = $('.' + mealName + '-table');
+	  var mealCalories = appendFoodFromMeal(meals.foods, table);
+	  $('.' + mealName + '-total').append('' + mealCalories);
+	  remainingCal(mealName, mealCalories);
+	  return mealCalories;
+	};
+
+	var appendFoodFromMeal = function appendFoodFromMeal(foods, table) {
+	  var calories = 0;
+	  foods.forEach(function (food) {
+	    table.append('\n      <tr><td>' + food.name + '</td>\n      <td class="calories">' + food.calories + '</td></tr>');
+	    calories += food.calories;
+	  });
+	  return calories;
+	};
+
+	var colorizeCalories = function colorizeCalories(calories, total, id) {
+	  var remaining = total - calories;
+	  if (remaining < 0) {
+	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
+	  } else {
+	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
+	  }
+	};
+
+	var dailyCalories = function dailyCalories(calories) {
+	  $('.daily-total').append(calories);
+	  colorizeCalories(calories, 2000, 'daily');
+	};
+
+	var remainingCal = function remainingCal(id, totalCal) {
+	  if (id === 'breakfast') {
+	    colorizeCalories(totalCal, 400, id);
+	  } else if (id === 'dinner') {
+	    colorizeCalories(totalCal, 800, id);
+	  } else if (id === 'lunch') {
+	    colorizeCalories(totalCal, 600, id);
+	  } else if (id === 'snack') {
+	    colorizeCalories(totalCal, 200, id);
+	  } else {
+	    console.log(id + ' table not found');
+	  }
+	};
+
+	module.exports = { getAllMeals: getAllMeals };
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
+	var foodRequest = __webpack_require__(9);
 	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var deleteFood = function deleteFood(item, foodUrl) {
@@ -10827,13 +10850,13 @@
 	});
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var foodResponse = __webpack_require__(9);
+	var foodResponse = __webpack_require__(10);
 
 	var getFoods = function getFoods() {
 	  $.ajax({
@@ -10856,7 +10879,7 @@
 	module.exports = { postFood: postFood, getFoods: getFoods };
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
