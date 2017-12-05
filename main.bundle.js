@@ -10802,6 +10802,18 @@
 	    event.preventDefault();
 	  });
 
+	  $('.search-input').keyup(function () {
+	    var items = $('.food-name');
+	    var filter = $('.search-input').val().toLowerCase();
+	    console.log(filter);
+	    items.parent().hide();
+	    items.each(function () {
+	      if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
+	        $(this).parent().show();
+	      }
+	    });
+	  });
+
 	  // $('.food-row').click(function(){
 	  //   alert("You clicked on something")
 	  // })
@@ -10863,13 +10875,13 @@
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="food-row' + data.id + '"><td>' + data.name + '</td> <td>' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td class="food-name">' + data.name + '</td> <td>' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
 	var appendFoodInMeals = function appendFoodInMeals(response) {
 	  response.forEach(function (data) {
-	    $('.diary-food-table').append('<tr class="food-row' + data.id + '"><td><input type="checkbox" name="vehicle" value="something"></td><td>' + data.name + '</td> <td>' + data.calories + '</td></tr>');
+	    $('.diary-food-table').append('<tr class="fr food-row' + data.id + '"><td><input type="checkbox" name="vehicle" value="something"></td><td class="food-name">' + data.name + '</td> <td>' + data.calories + '</td></tr>');
 	  });
 	};
 
