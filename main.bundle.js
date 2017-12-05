@@ -85,9 +85,7 @@
 
 
 	// module
-
 	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
-
 
 	// exports
 
@@ -10754,9 +10752,7 @@
 
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(8);
-
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
-
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var deleteFood = function deleteFood(item, foodUrl) {
 	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
@@ -10806,6 +10802,18 @@
 	    event.preventDefault();
 	  });
 
+	  $('.search-input').keyup(function () {
+	    var items = $('.food-name');
+	    var filter = $('.search-input').val().toLowerCase();
+	    console.log(filter);
+	    items.parent().hide();
+	    items.each(function () {
+	      if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
+	        $(this).parent().show();
+	      }
+	    });
+	  });
+
 	  // $('.food-row').click(function(){
 	  //   alert("You clicked on something")
 	  // })
@@ -10818,8 +10826,6 @@
 	      setTimeout(function () {
 	        deleteFood(foodId, foodUrl);
 	      }, 300);
-	    } else {
-	      debugger;
 	    }
 	  });
 	});
@@ -10869,13 +10875,13 @@
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="food-row' + data.id + '"><td>' + data.name + '</td> <td>' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td contenteditable="true" class="food-name name">' + data.name + '</td> <td contenteditable="true" class="calories">' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
 	var appendFoodInMeals = function appendFoodInMeals(response) {
 	  response.forEach(function (data) {
-	    $('.diary-food-table').append('<tr class="food-row' + data.id + '"><td><input type="checkbox" name="vehicle" value="something"></td><td>' + data.name + '</td> <td>' + data.calories + '</td></tr>');
+	    $('.diary-food-table').append('<tr class="fr food-row' + data.id + '"><td><input type="checkbox" name="vehicle" value="something"></td><td class="food-name">' + data.name + '</td> <td>' + data.calories + '</td></tr>');
 	  });
 	};
 
