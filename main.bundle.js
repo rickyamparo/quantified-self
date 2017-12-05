@@ -10871,7 +10871,7 @@
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td class="food-name">' + data.name + '</td> <td>' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td contenteditable="true" class="food-name name">' + data.name + '</td> <td contenteditable="true" class="calories">' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
