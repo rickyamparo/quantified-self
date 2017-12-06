@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.warning {\n  color: red\n}\n\n.fa {\n  color: red;\n}\n", ""]);
 
 	// exports
 
@@ -405,8 +405,8 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 	var mealResponse = __webpack_require__(7);
+	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var requestMeals = function requestMeals(method) {
 	  fetch(url + 'meals', {
@@ -427,21 +427,6 @@
 	});
 
 	module.exports = requestMeals;
-
-	// const traverseFoodInMeals = (id, method) => {
-	//   fetch(`${url}meals`, {method: 'GET'})
-	//     .then( response => response.json())
-	//     .then( responseArray => {
-	//       responseArray.forEach( meals => {
-	//
-	//         deleteMealFoods(meals, id)
-	//         method(meals, id)
-	//
-	//       })
-	//     })
-	//     .catch( error => {console.log( { error })
-	//     })
-	// }
 
 /***/ }),
 /* 6 */
@@ -10775,15 +10760,7 @@
 
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(9);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
-
-	var deleteFood = function deleteFood(item, foodUrl) {
-	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
-	    return console.log(response);
-	  }).catch(function (error) {
-	    console.log({ error: error });;
-	  });
-	};
+	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var traverseFoodInMeals = function traverseFoodInMeals(id, method) {
 	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
@@ -10804,49 +10781,70 @@
 	  meal.forEach(function (food) {
 	    if (food.id == id) {
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
-	      deleteFood(id, mealUrl);
+	      foodRequest.deleteFood(id, mealUrl);
 	    }
 	  });
 	};
 
 	$(document).ready(function () {
-	  foodRequest.getFoods();
+	  foodRequest.getFoods(url + 'foods');
 
 	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
 	    var calories = $('input[name=food-calories]').val();
 	    if (name === "") {
-	      alert("Please enter food name");
+	      $('div.warning').remove();
+	      $('form.add-food').append("<div class='warning'>You need to enter in a Name</div>");
 	    } else if (calories === "") {
-	      alert("Please enter calories");
+	      $('div.warning').remove();
+	      $('form.add-food').append("<div class='warning'>You need to enter in Calories</div>");
 	    } else {
+	      $('div.warning').remove();
 	      foodRequest.postFood(name, calories);
 	    }
 	    event.preventDefault();
 	  });
 
-	  $('.search-input').keyup(function () {
-	    var items = $('.food-name');
-	    var filter = $('.search-input').val().toLowerCase();
-	    items.parent().hide();
-	    items.each(function () {
-	      if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
-	        $(this).parent().show();
-	      }
-	    });
+	  $(document).on("click", "i.fa.fa-minus-circle", function () {
+	    var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	    event.target.parentElement.parentElement.remove();
+	    var foodUrl = url + 'foods/' + foodId;
+	    traverseFoodInMeals(foodId, deleteMealFoods);
+	    setTimeout(function () {
+	      foodRequest.deleteFood(foodId, foodUrl);
+	    }, 300);
 	  });
+	});
 
-	  $('tbody#food-table').on("click", function (e) {
-	    if (event.target.nodeName == "I") {
-	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
-	      event.target.parentElement.parentElement.remove();
-	      var foodUrl = url + 'foods/' + foodId;
-	      traverseFoodInMeals(foodId, deleteMealFoods);
-	      setTimeout(function () {
-	        deleteFood(foodId, foodUrl);
-	      }, 300);
+	$('.search-input').keyup(function () {
+	  var items = $('.food-name');
+	  var filter = $('.search-input').val().toLowerCase();
+	  items.parent().hide();
+	  items.each(function () {
+	    if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
+	      $(this).parent().show();
 	    }
 	  });
+	});
+
+	$(document).on("blur", "td.food-name, td.food-calories", function () {
+	  var value = event.target.textContent;
+	  var field = event.target.className.replace(/^food-+/i, '');
+	  var foodId = event.target.parentElement.className.match(/\d/g).join('');
+	  var foodUrl = url + 'foods/' + foodId;
+	  foodRequest.editFood(foodUrl, value, field);
+	});
+
+	$('tbody#food-table').on("click", function (e) {
+	  if (event.target.nodeName == "I") {
+	    var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	    event.target.parentElement.parentElement.remove();
+	    var foodUrl = url + 'foods/' + foodId;
+	    traverseFoodInMeals(foodId, deleteMealFoods);
+	    setTimeout(function () {
+	      deleteFood(foodId, foodUrl);
+	    }, 300);
+	  }
 	});
 
 /***/ }),
@@ -10855,28 +10853,58 @@
 
 	'use strict';
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var $ = __webpack_require__(6);
 	var foodResponse = __webpack_require__(10);
 
-	var getFoods = function getFoods() {
+	var getFoods = function getFoods(foodUrl) {
 	  $.ajax({
 	    type: "GET",
-	    url: 'http://serene-sea-75169.herokuapp.com/api/v1/foods'
-	  }).then(foodResponse.foodResponse).catch(foodResponse.errorLog);
+	    url: foodUrl
+	  }).then(foodResponse.appendBothFoods).catch(foodResponse.errorLog);
 	};
 
 	var postFood = function postFood(name, calories) {
-	  $.post('http://serene-sea-75169.herokuapp.com/api/v1/foods', {
+	  $.post('https://serene-sea-75169.herokuapp.com/api/v1/foods', {
 	    "food": {
 	      "name": name,
 	      "calories": calories
 	    }
 	  }).then(function (response) {
-	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').prepend('<tr class="food-row' + response.id + '"><td contenteditable="true" class="name">' + response.name + '</td> <td contenteditable="true" class="calories">' + response.calories + '</td> <td align="center"><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
-	module.exports = { postFood: postFood, getFoods: getFoods };
+	var deleteFood = function deleteFood(item, foodUrl) {
+	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  });
+	};
+
+	var editFood = function editFood(foodUrl, data, field) {
+	  // fetch(foodUrl, {
+	  //   method: 'PATCH',
+	  //   contentType: 'application/json',
+	  //   body: JSON.stringify({
+	  //     food: {
+	  //       [field]: data
+	  //     }
+	  //   })
+	  // })
+	  //   .then( response => console.log(response))
+	  //   .catch(error => {console.log({ error })
+	  // })
+	  $.ajax({
+	    type: 'PATCH',
+	    data: { food: _defineProperty({}, field, data) },
+	    url: foodUrl
+	  });
+	};
+
+	module.exports = { postFood: postFood, getFoods: getFoods, deleteFood: deleteFood, editFood: editFood };
 
 /***/ }),
 /* 10 */
@@ -10886,15 +10914,14 @@
 
 	var $ = __webpack_require__(6);
 
-	var foodResponse = function foodResponse(response) {
-	  response.reverse(response);
+	var appendBothFoods = function appendBothFoods(response) {
 	  appendFood(response);
 	  appendFoodInMeals(response);
 	};
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td contenteditable="true" class="food-name name">' + data.name + '</td> <td contenteditable="true" class="calories">' + data.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td contenteditable="true" class="food-name">' + data.name + '</td> <td contenteditable="true" class="food-calories">' + data.calories + '</td> <td align="center"><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
@@ -10908,7 +10935,7 @@
 	  console.error(error);
 	};
 
-	module.exports = { errorLog: errorLog, foodResponse: foodResponse };
+	module.exports = { errorLog: errorLog, appendBothFoods: appendBothFoods };
 
 /***/ })
 /******/ ]);
