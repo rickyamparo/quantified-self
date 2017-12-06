@@ -405,16 +405,16 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 	var mealResponse = __webpack_require__(7);
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
-	var requestMeals = function requestMeals(method) {
+	var requestMeals = function requestMeals(method, id) {
 	  fetch(url + 'meals', {
 	    method: 'GET'
 	  }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
-	    method(responseArray);
+	    method(responseArray, id);
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  });
@@ -426,7 +426,7 @@
 	  }, 200);
 	});
 
-	module.exports = requestMeals;
+	module.exports = { requestMeals: requestMeals };
 
 /***/ }),
 /* 6 */
@@ -10847,60 +10847,28 @@
 
 	'use strict';
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	var $ = __webpack_require__(6);
 	var foodResponse = __webpack_require__(10);
 
-	var getFoods = function getFoods(foodUrl) {
+	var getFoods = function getFoods() {
 	  $.ajax({
 	    type: "GET",
-	    url: foodUrl
-	  }).then(foodResponse.appendBothFoods).catch(foodResponse.errorLog);
+	    url: 'http://serene-sea-75169.herokuapp.com/api/v1/foods'
+	  }).then(foodResponse.foodResponse).catch(foodResponse.errorLog);
 	};
 
 	var postFood = function postFood(name, calories) {
-	  $.post('https://serene-sea-75169.herokuapp.com/api/v1/foods', {
+	  $.post('http://serene-sea-75169.herokuapp.com/api/v1/foods', {
 	    "food": {
 	      "name": name,
 	      "calories": calories
 	    }
 	  }).then(function (response) {
-	    $('tbody#food-table').prepend('<tr class="food-row' + response.id + '">\n                                  <td contenteditable="true" class="food-name">' + response.name + '</td>\n                                  <td contenteditable="true" class="food-calories">' + response.calories + '</td>\n                                  <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                  </i></td></tr>');
+	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
 	  });
 	};
 
-	var deleteFood = function deleteFood(item, foodUrl) {
-	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
-	    return console.log(response);
-	  }).catch(function (error) {
-	    console.log({ error: error });;
-	  });
-	};
-
-	var editFood = function editFood(foodUrl, data, field) {
-	  // fetch(foodUrl, {
-	  //   method: 'PATCH',
-	  //   contentType: 'application/json',
-	  //   body: JSON.stringify({
-	  //     food: {
-	  //       [field]: data
-	  //     }
-	  //   })
-	  // })
-	  //   .then( response => console.log(response))
-	  //   .catch(error => {console.log({ error })
-	  // })
-	  $.ajax({
-	    type: 'PATCH',
-	    data: { food: _defineProperty({}, field, data) },
-	    url: foodUrl
-	  }).then(function (response) {
-	    return console.log(response);
-	  });
-	};
-
-	module.exports = { postFood: postFood, getFoods: getFoods, deleteFood: deleteFood, editFood: editFood };
+	module.exports = { postFood: postFood, getFoods: getFoods };
 
 /***/ }),
 /* 10 */
