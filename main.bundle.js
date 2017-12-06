@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n}\n\ntable, th, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.warning {\n  color: red\n}\n\n.fa {\n  color: red;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\ntable {\n    border-collapse: collapse;\n    border: 0;\n}\n\nth, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.food-calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.column {\n    float: left;\n    width: 25%;\n}\n\n.column-50 {\n    float: left;\n    width: 50%;\n}\n\n.row {\n  padding-left: 20px;\n}\n\n.row:after {\n    content: \"\";\n    display: table;\n    clear: both;\n}\n\n.warning {\n  color: red;\n}\n\n.fa {\n  color: red;\n}\n\n.delete-cell {\n  border: none;\n}\n", ""]);
 
 	// exports
 
@@ -10716,7 +10716,7 @@
 	var appendFoodFromMeal = function appendFoodFromMeal(foods, table) {
 	  var calories = 0;
 	  foods.forEach(function (food) {
-	    table.append('\n      <tr><td>' + food.name + '</td>\n      <td class="calories">' + food.calories + '</td></tr>');
+	    table.append('\n      <tr><td>' + food.name + '</td>\n      <td class="food-calories">' + food.calories + '</td>\n      <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n      </i></td></tr>');
 	    calories += food.calories;
 	  });
 	  return calories;
@@ -10760,14 +10760,22 @@
 
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(9);
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
+	var mealRequest = __webpack_require__(5);
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+
+	var deleteFood = function deleteFood(item, mealUrl) {
+	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  });
+	};
 
 	var traverseFoodInMeals = function traverseFoodInMeals(id, method) {
 	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
-	      deleteMealFoods(meals, id);
 	      method(meals, id);
 	    });
 	  }).catch(function (error) {
@@ -10781,70 +10789,56 @@
 	  meal.forEach(function (food) {
 	    if (food.id == id) {
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
-	      foodRequest.deleteFood(id, mealUrl);
+	      deleteFood(id, mealUrl);
 	    }
 	  });
 	};
 
 	$(document).ready(function () {
-	  foodRequest.getFoods(url + 'foods');
+	  foodRequest.getFoods();
 
 	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
 	    var calories = $('input[name=food-calories]').val();
 	    if (name === "") {
-	      $('div.warning').remove();
-	      $('form.add-food').append("<div class='warning'>You need to enter in a Name</div>");
+	      alert("Please enter food name");
 	    } else if (calories === "") {
-	      $('div.warning').remove();
-	      $('form.add-food').append("<div class='warning'>You need to enter in Calories</div>");
+	      alert("Please enter calories");
 	    } else {
-	      $('div.warning').remove();
 	      foodRequest.postFood(name, calories);
 	    }
 	    event.preventDefault();
 	  });
 
-	  $(document).on("click", "i.fa.fa-minus-circle", function () {
-	    var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
-	    event.target.parentElement.parentElement.remove();
-	    var foodUrl = url + 'foods/' + foodId;
-	    traverseFoodInMeals(foodId, deleteMealFoods);
-	    setTimeout(function () {
-	      foodRequest.deleteFood(foodId, foodUrl);
-	    }, 300);
+	  $('.search-input').keyup(function () {
+	    var items = $('.food-name');
+	    var filter = $('.search-input').val().toLowerCase();
+	    items.parent().hide();
+	    items.each(function () {
+	      if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
+	        $(this).parent().show();
+	      }
+	    });
 	  });
-	});
+	  $('.meal-button').on("click", function (event) {
+	    console.log("button");
+	    var meal = this.innerText.toLowerCase();
+	    var checkbox = $('.meal-checkbox');
+	    debugger;
+	  });
 
-	$('.search-input').keyup(function () {
-	  var items = $('.food-name');
-	  var filter = $('.search-input').val().toLowerCase();
-	  items.parent().hide();
-	  items.each(function () {
-	    if (this.innerText.toLowerCase().indexOf(filter) >= 0) {
-	      $(this).parent().show();
+	  $('tbody#food-table').on("click", function (e) {
+	    if (event.target.nodeName == "I") {
+	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	      event.target.parentElement.parentElement.remove();
+	      var foodUrl = url + 'foods/' + foodId;
+	      mealRequest.requestMeals(foodId, mealResponse.deleteMealFoods);
+	      // traverseFoodInMeals(foodId, deleteMealFoods)
+	      setTimeout(function () {
+	        deleteFood(foodId, foodUrl);
+	      }, 300);
 	    }
 	  });
-	});
-
-	$(document).on("blur", "td.food-name, td.food-calories", function () {
-	  var value = event.target.textContent;
-	  var field = event.target.className.replace(/^food-+/i, '');
-	  var foodId = event.target.parentElement.className.match(/\d/g).join('');
-	  var foodUrl = url + 'foods/' + foodId;
-	  foodRequest.editFood(foodUrl, value, field);
-	});
-
-	$('tbody#food-table').on("click", function (e) {
-	  if (event.target.nodeName == "I") {
-	    var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
-	    event.target.parentElement.parentElement.remove();
-	    var foodUrl = url + 'foods/' + foodId;
-	    traverseFoodInMeals(foodId, deleteMealFoods);
-	    setTimeout(function () {
-	      deleteFood(foodId, foodUrl);
-	    }, 300);
-	  }
 	});
 
 /***/ }),
@@ -10872,7 +10866,7 @@
 	      "calories": calories
 	    }
 	  }).then(function (response) {
-	    $('tbody#food-table').prepend('<tr class="food-row' + response.id + '"><td contenteditable="true" class="name">' + response.name + '</td> <td contenteditable="true" class="calories">' + response.calories + '</td> <td align="center"><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').prepend('<tr class="food-row' + response.id + '">\n                                  <td contenteditable="true" class="food-name">' + response.name + '</td>\n                                  <td contenteditable="true" class="food-calories">' + response.calories + '</td>\n                                  <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                  </i></td></tr>');
 	  });
 	};
 
@@ -10901,6 +10895,8 @@
 	    type: 'PATCH',
 	    data: { food: _defineProperty({}, field, data) },
 	    url: foodUrl
+	  }).then(function (response) {
+	    return console.log(response);
 	  });
 	};
 
@@ -10921,13 +10917,13 @@
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '"><td contenteditable="true" class="food-name">' + data.name + '</td> <td contenteditable="true" class="food-calories">' + data.calories + '</td> <td align="center"><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr food-row' + data.id + '">\n                                  <td contenteditable="true" class="food-name">' + data.name + '</td>\n                                  <td contenteditable="true" class="food-calories">' + data.calories + '</td>\n                                  <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                  </i></td></tr>');
 	  });
 	};
 
 	var appendFoodInMeals = function appendFoodInMeals(response) {
 	  response.forEach(function (data) {
-	    $('.diary-food-table').append('<tr class="fr food-row' + data.id + '"><td><input type="checkbox" name="vehicle" value="something"></td><td class="food-name">' + data.name + '</td> <td>' + data.calories + '</td></tr>');
+	    $('.diary-food-table').append('<tr class="fr food-row' + data.id + '">\n                                   <td><input type="checkbox" class="meal-checkbox"></td>\n                                   <td class="food-name">' + data.name + '</td>\n                                   <td class="food-calories">' + data.calories + '</td>\n                                   <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                   </i></td></tr>');
 	  });
 	};
 
