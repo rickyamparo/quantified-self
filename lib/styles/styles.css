@@ -5,9 +5,10 @@
 
 table {
     border-collapse: collapse;
+    border: 0;
 }
 
-table, th, td {
+th, td {
     border: 1px solid black;
 }
 
@@ -46,9 +47,13 @@ th {
 }
 
 .warning {
-  color: red
+  color: red;
 }
 
 .fa {
   color: red;
+}
+
+.delete-cell {
+  border: none;
 }
