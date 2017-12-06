@@ -44,3 +44,11 @@ th {
     display: table;
     clear: both;
 }
+
+.warning {
+  color: red
+}
+
+.fa {
+  color: red;
+}
