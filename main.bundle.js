@@ -427,7 +427,8 @@
 	    return console.log(response.json());
 	  }).catch(function (error) {
 	    console.log({ error: error });
-	  }).then(requestMeals(mealResponse.getAllMeals));
+	  });
+	  // .then(requestMeals(mealResponse.getAllMeals))
 	};
 
 	$(document).ready(function () {
@@ -10719,7 +10720,7 @@
 	  var table = $('.' + mealName + '-table');
 	  table.attr('id', '' + meals.id);
 	  var mealCalories = appendFoodFromMeal(meals, table);
-	  $('.' + mealName + '-total').append('' + mealCalories);
+	  $('.' + mealName + '-total').html('' + mealCalories);
 	  remainingCal(mealName, mealCalories);
 	  return mealCalories;
 	};
@@ -10804,10 +10805,7 @@
 	    }
 	  });
 	};
-
-	$(document).ready(function () {
-	  foodRequest.getFoods();
-
+	var eventAddFood = function eventAddFood() {
 	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
 	    var calories = $('input[name=food-calories]').val();
@@ -10820,6 +10818,12 @@
 	    }
 	    event.preventDefault();
 	  });
+	};
+
+	$(document).ready(function () {
+	  foodRequest.getFoods();
+
+	  eventAddFood();
 
 	  $('.search-input').keyup(function () {
 	    var items = $('.food-name');
