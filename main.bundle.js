@@ -10735,16 +10735,15 @@
 
 	var colorizeCalories = function colorizeCalories(calories, total, id) {
 	  var remaining = total - calories;
-	  $('.' + id + '-remaining').empty;
 	  if (remaining < 0) {
-	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
+	    $('.' + id + '-remaining').html('<font color="red">' + remaining + '</font>');
 	  } else {
-	    $('.' + id + '-remaining').append('<font color="green">' + remaining + '</font>');
+	    $('.' + id + '-remaining').html('<font color="green">' + remaining + '</font>');
 	  }
 	};
 
 	var dailyCalories = function dailyCalories(calories) {
-	  $('.daily-total').append(calories);
+	  $('.daily-total').html(calories);
 	  colorizeCalories(calories, 2000, 'daily');
 	};
 
@@ -10856,7 +10855,7 @@
 	      // traverseFoodInMeals(foodId, deleteMealFoods)
 	      setTimeout(function () {
 	        deleteFood(foodId, foodUrl);
-	      }, 300);
+	      }, 0);
 	    }
 	  });
 	});
