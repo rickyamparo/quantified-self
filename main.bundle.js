@@ -423,8 +423,6 @@
 	var postMeals = function postMeals(path) {
 	  fetch('' + url + path, {
 	    method: 'POST'
-	  }).then(function (response) {
-	    return console.log(response.json());
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  }).then(requestMeals(mealResponse.getAllMeals));
@@ -10848,6 +10846,7 @@
 	        mealRequest.postMeals(_url);
 	      }
 	    });
+	    checkbox.prop("checked", false);
 	  });
 
 	  $('tbody#food-table').on("click", function (e) {
