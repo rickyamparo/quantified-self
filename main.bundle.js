@@ -405,16 +405,26 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
+	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 	var mealResponse = __webpack_require__(7);
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
-	var requestMeals = function requestMeals(method) {
+	var requestMeals = function requestMeals(method, id) {
 	  fetch(url + 'meals', {
 	    method: 'GET'
 	  }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
-	    method(responseArray);
+	    method(responseArray, id);
+	  }).catch(function (error) {
+	    console.log({ error: error });
+	  });
+	};
+
+	var postMeals = function postMeals(path) {
+	  fetch('' + url + path, {
+	    method: 'POST'
+	  }).then(function (response) {
+	    return console.log(response.json());
 	  }).catch(function (error) {
 	    console.log({ error: error });
 	  });
@@ -426,7 +436,7 @@
 	  }, 200);
 	});
 
-	module.exports = requestMeals;
+	module.exports = { requestMeals: requestMeals, postMeals: postMeals };
 
 /***/ }),
 /* 6 */
@@ -10826,14 +10836,13 @@
 	    console.log("button");
 	    var meal = this.innerText.toLowerCase();
 	    var checkbox = $('.meal-checkbox');
-	    debugger;
 	    checkbox.each(function () {
 	      if (this.checked) {
 	        var mealId = $('.' + meal + '-table').attr('id');
 	        var foodId = this.parentElement.parentElement.id;
-	        debugger;
-	        console.log(mealId);
-	        console.log(foodId);
+	        var _url = 'meals/' + mealId + '/foods/' + foodId;
+	        console.log(_url);
+	        mealRequest.postMeals(_url);
 	      }
 	    });
 	  });
