@@ -10829,9 +10829,11 @@
 	    debugger;
 	    checkbox.each(function () {
 	      if (this.checked) {
-	        console.log(meal);
+	        var mealId = $('.' + meal + '-table').attr('id');
+	        var foodId = this.parentElement.parentElement.id;
 	        debugger;
-	        console.log(this.parentElement.parentElement.id);
+	        console.log(mealId);
+	        console.log(foodId);
 	      }
 	    });
 	  });
