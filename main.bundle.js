@@ -10773,7 +10773,7 @@
 	var mealRequest = __webpack_require__(5);
 	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
 
-	var deleteFood = function deleteFood(item, mealUrl) {
+	var deleteFood = function deleteFood(mealUrl) {
 	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
 	    return console.log(response);
 	  }).catch(function (error) {
@@ -10782,7 +10782,7 @@
 	};
 
 	var traverseFoodInMeals = function traverseFoodInMeals(id, method) {
-	  fetch(url + 'meals', { method: 'GET' }).then(function (response) {
+	  return fetch(url + 'meals', { method: 'GET' }).then(function (response) {
 	    return response.json();
 	  }).then(function (responseArray) {
 	    responseArray.forEach(function (meals) {
@@ -10799,7 +10799,7 @@
 	  meal.forEach(function (food) {
 	    if (food.id == id) {
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
-	      deleteFood(id, mealUrl);
+	      deleteFood(mealUrl);
 	    }
 	  });
 	};
@@ -10847,16 +10847,20 @@
 	    checkbox.prop("checked", false);
 	  });
 
-	  $('tbody#food-table').on("click", function (e) {
-	    if (event.target.nodeName == "I") {
-	      var foodId = event.target.parentElement.parentElement.className.match(/\d/g).join('');
+	  $(document).on("click", "i.fa.fa-minus-circle", function () {
+	    var foodId = event.target.parentElement.parentElement.id;
+	    if (event.target.parentElement.parentElement.className == "fr") {
 	      event.target.parentElement.parentElement.remove();
 	      var foodUrl = url + 'foods/' + foodId;
-	      mealRequest.requestMeals(foodId, mealResponse.deleteMealFoods);
-	      // traverseFoodInMeals(foodId, deleteMealFoods)
+	      traverseFoodInMeals(foodId, deleteMealFoods);
 	      setTimeout(function () {
-	        deleteFood(foodId, foodUrl);
-	      }, 0);
+	        deleteFood(foodUrl);
+	      }, 300);
+	    } else {
+	      event.target.parentElement.parentElement.remove();
+	      var mealId = event.target.parentElement.parentElement.className;
+	      var mealUrl = url + 'meals/' + mealId + '/foods/' + foodId;
+	      deleteFood(mealUrl);
 	    }
 	  });
 	});
