@@ -10735,6 +10735,7 @@
 
 	var colorizeCalories = function colorizeCalories(calories, total, id) {
 	  var remaining = total - calories;
+	  $('.' + id + '-remaining').empty;
 	  if (remaining < 0) {
 	    $('.' + id + '-remaining').append('<font color="red">' + remaining + '</font>');
 	  } else {
@@ -10743,7 +10744,6 @@
 	};
 
 	var dailyCalories = function dailyCalories(calories) {
-	  $('.daily-total').empty();
 	  $('.daily-total').append(calories);
 	  colorizeCalories(calories, 2000, 'daily');
 	};
