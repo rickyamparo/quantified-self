@@ -10835,7 +10835,6 @@
 	  });
 
 	  $('.meal-button').on("click", function (event) {
-	    console.log("button");
 	    var meal = this.innerText.toLowerCase();
 	    var checkbox = $('.meal-checkbox');
 	    checkbox.each(function () {
