@@ -427,8 +427,7 @@
 	    return console.log(response.json());
 	  }).catch(function (error) {
 	    console.log({ error: error });
-	  });
-	  // .then(requestMeals(mealResponse.getAllMeals))
+	  }).then(requestMeals(mealResponse.getAllMeals));
 	};
 
 	$(document).ready(function () {
@@ -10718,6 +10717,7 @@
 	var appendMeals = function appendMeals(meals) {
 	  var mealName = meals.name.toLowerCase();
 	  var table = $('.' + mealName + '-table');
+	  table.empty();
 	  table.attr('id', '' + meals.id);
 	  var mealCalories = appendFoodFromMeal(meals, table);
 	  $('.' + mealName + '-total').html('' + mealCalories);
