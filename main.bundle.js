@@ -10803,6 +10803,7 @@
 	    }
 	  });
 	};
+
 	var eventAddFood = function eventAddFood() {
 	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
@@ -10820,8 +10821,6 @@
 
 	$(document).ready(function () {
 	  foodRequest.getFoods();
-
-	  eventAddFood();
 
 	  $('.search-input').keyup(function () {
 	    var items = $('.food-name');
