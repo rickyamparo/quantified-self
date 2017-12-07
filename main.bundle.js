@@ -427,7 +427,7 @@
 	    return console.log(response.json());
 	  }).catch(function (error) {
 	    console.log({ error: error });
-	  });
+	  }).then(requestMeals(mealResponse.getAllMeals));
 	};
 
 	$(document).ready(function () {
@@ -10743,6 +10743,7 @@
 	};
 
 	var dailyCalories = function dailyCalories(calories) {
+	  $('.daily-total').empty();
 	  $('.daily-total').append(calories);
 	  colorizeCalories(calories, 2000, 'daily');
 	};
@@ -10841,7 +10842,6 @@
 	        var mealId = $('.' + meal + '-table').attr('id');
 	        var foodId = this.parentElement.parentElement.id;
 	        var _url = 'meals/' + mealId + '/foods/' + foodId;
-	        console.log(_url);
 	        mealRequest.postMeals(_url);
 	      }
 	    });
