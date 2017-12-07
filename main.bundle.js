@@ -10771,7 +10771,7 @@
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(9);
 	var mealRequest = __webpack_require__(5);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var deleteFood = function deleteFood(mealUrl) {
 	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
@@ -10873,16 +10873,17 @@
 
 	var $ = __webpack_require__(6);
 	var foodResponse = __webpack_require__(10);
+	var url = "https://serene-sea-75169.herokuapp.com/api/v1/";
 
 	var getFoods = function getFoods() {
 	  $.ajax({
 	    type: "GET",
-	    url: 'http://serene-sea-75169.herokuapp.com/api/v1/foods'
+	    url: 'https://serene-sea-75169.herokuapp.com/api/v1/foods'
 	  }).then(foodResponse.appendBothFoods).catch(foodResponse.errorLog);
 	};
 
 	var postFood = function postFood(name, calories) {
-	  $.post('http://serene-sea-75169.herokuapp.com/api/v1/foods', {
+	  $.post('https://serene-sea-75169.herokuapp.com/api/v1/foods', {
 	    "food": {
 	      "name": name,
 	      "calories": calories
