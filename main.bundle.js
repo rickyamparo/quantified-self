@@ -431,9 +431,11 @@
 	var deleteFood = function deleteFood(mealUrl) {
 	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
 	    return console.log(response);
-	  }).catch(function (error) {
+	  }).then(setTimeout(function () {
+	    requestMeals(mealResponse.getAllMeals);
+	  }, 200)).catch(function (error) {
 	    console.log({ error: error });;
-	  }).then(requestMeals(mealResponse.getAllMeals));
+	  });
 	};
 
 	$(document).ready(function () {
@@ -10896,7 +10898,7 @@
 	      event.target.parentElement.parentElement.remove();
 	      var mealId = event.target.parentElement.parentElement.className;
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + foodId;
-	      deleteFood(mealUrl).then(mealRequest.deleteFood);
+	      mealRequest.deleteFood(mealUrl);
 	    }
 	  });
 
