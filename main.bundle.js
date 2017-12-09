@@ -405,7 +405,7 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'http://serene-sea-75169.herokuapp.com/api/v1/';
+	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 	var mealResponse = __webpack_require__(7);
 
 	var requestMeals = function requestMeals(method, id) {
@@ -428,13 +428,21 @@
 	  }).then(requestMeals(mealResponse.getAllMeals));
 	};
 
+	var deleteFood = function deleteFood(mealUrl) {
+	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  }).then(requestMeals(mealResponse.getAllMeals));
+	};
+
 	$(document).ready(function () {
 	  setTimeout(function () {
 	    requestMeals(mealResponse.getAllMeals);
 	  }, 200);
 	});
 
-	module.exports = { requestMeals: requestMeals, postMeals: postMeals };
+	module.exports = { requestMeals: requestMeals, postMeals: postMeals, deleteFood: deleteFood };
 
 /***/ }),
 /* 6 */
@@ -10773,6 +10781,34 @@
 	var mealRequest = __webpack_require__(5);
 	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
+	var switcher = 1;
+
+	var sortTable = function sortTable(table, switcher) {
+	  var tableRows = 'tbody.' + table + '-table tr';
+	  var rows = $(tableRows).get();
+	  rows.sort(function (a, b) {
+	    var A = getVal(a);
+	    var B = getVal(b);
+	    if (A < B) {
+	      return -1 * switcher;
+	    }
+	    if (A > B) {
+	      return 1 * switcher;
+	    }
+	    return 0;
+	  });
+	  function getVal(element) {
+	    var v = $(element).children('td').eq(1).text().toUpperCase();
+	    if ($.isNumeric(v)) {
+	      v = parseInt(v, 10);
+	    }
+	    return v;
+	  }
+	  $.each(rows, function (index, row) {
+	    $('tbody.' + table + '-table').append(row);
+	  });
+	};
+
 	var deleteFood = function deleteFood(mealUrl) {
 	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
 	    return console.log(response);
@@ -10860,8 +10896,14 @@
 	      event.target.parentElement.parentElement.remove();
 	      var mealId = event.target.parentElement.parentElement.className;
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + foodId;
-	      deleteFood(mealUrl);
+	      deleteFood(mealUrl).then(mealRequest.deleteFood);
 	    }
+	  });
+
+	  $('th.calories-sort').on('click', function () {
+	    switcher *= -1;
+	    var table = event.target.parentElement.parentElement.parentElement.id;
+	    sortTable(table, switcher);
 	  });
 	});
 
