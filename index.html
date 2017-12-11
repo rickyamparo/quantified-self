@@ -9,66 +9,17 @@
 </head>
 
 <body>
-
-  <h1>Main Diary</h1>
-  <div class="row">
-    <div class="column">
-      <table id="breakfast">
-        <h2>Breakfast</h2>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th class="calories-sort">Calories</th>
-          </tr>
-        </thead>
-        <tbody class='breakfast-table'>
-        </tbody>
-        <tr class="totals calories">
-          <td>Total Calories:</td>
-          <td class="breakfast-total total"></td>
-        </tr>
-        <tr class="totals calories">
-          <td>Remaining Calories:</td>
-          <td class="breakfast-remaining"></td>
-        </tr>
-      </table>
-
-      <table id="dinner">
-        <thead>
-        <h2>Dinner</h2>
-        <tr>
-          <th>Name</th>
-          <th class="calories-sort">Calories</th>
-        </tr>
-      </thead>
-        <tbody class='dinner-table'>
-        </tbody>
-        <tr class="totals calories">
-          <td>Total Calories:</td>
-          <td class="dinner-total total"></td>
-        </tr>
-        <tr class="totals calories">
-          <td>Remaining Calories:</td>
-          <td class="dinner-remaining"></td>
-        </tr>
-      </table>
-
+  <div id="test">
+    <div class="item">
+      <h1>Main Diary</h1>
 
       <h2>Foods</h2>
       <button id="new_food_button" onclick="location.href='/foods.html';">Create New</button>
       <h4>Add Selected To</h4>
-      <div class="row">
-        <div class="column-50">
           <button class="meal-button">Breakfast</button>
           <button class="meal-button">Lunch</button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="column-50">
           <button class="meal-button">Dinner</button>
           <button class="meal-button">Snack</button>
-        </div>
-      </div>
       <h4>Search by Name</h4>
       <input type="text" class="search-input" name="search-by-name">
       <table class="diary-food-table">
@@ -79,64 +30,112 @@
         </tr>
       </table>
     </div>
+    <section>
+        <table id="breakfast" class="item">
+          <caption>Breakfast</caption>
+          <thead>
 
-    <div class="column">
-      <table id="lunch">
-        <h2>Lunch</h2>
-        <tr>
-          <th>Name</th>
-          <th class="calories-sort">Calories</th>
-        </tr>
-        <tr>
-          <tbody class='lunch-table'>
+            <tr>
+              <th>Name</th>
+              <th class="calories-sort">Calories</th>
+            </tr>
+          </thead>
+          <tbody class='breakfast-table'>
           </tbody>
           <tr class="totals calories">
             <td>Total Calories:</td>
-            <td class="lunch-total total"></td>
+            <td class="breakfast-total total"></td>
           </tr>
           <tr class="totals calories">
             <td>Remaining Calories:</td>
-            <td class="lunch-remaining"></td>
+            <td class="breakfast-remaining"></td>
           </tr>
-      </table>
+        </table>
 
-      <table id="snack">
-        <h2>Snacks</h2>
-        <tr>
-          <th>Name</th>
-          <th class="calories-sort">Calories</th>
-        </tr>
-        <tbody class='snack-table'>
-        </tbody>
-        <tr class="totals calories">
-          <td>Total Calories:</td>
-          <td class="snack-total total"></td>
-        </tr>
-        <tr class="totals calories">
-          <td>Remaining Calories:</td>
-          <td class="calories snack-remaining"></td>
-        </tr>
-      </table>
 
-      <table>
-        <h2>Totals</h2>
-        <tr class="totals calories">
-          <td>Goal Calories:</td>
-          <td class="calories daily-goal">2000</td>
-        </tr>
-        <tr class="totals calories">
-          <td>Calories Consumed:</td>
-          <td class="calories daily-total"></td>
-        </tr>
-        <tr class="totals calories">
-          <td>Remaining Calories:</td>
-          <td class="calories daily-remaining"></td>
-        </tr>
-      </table>
-    </div>
-  </div>
-  <script src="main.bundle.js"></script>
-  <script src="https://use.fontawesome.com/39533c56d4.js"></script>
+        <table id="dinner" class="item">
+          <caption>Dinner</caption>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th class="calories-sort">Calories</th>
+            </tr>
+          </thead>
+          <tbody class='dinner-table'>
+          </tbody>
+          <tr class="totals calories">
+            <td>Total Calories:</td>
+            <td class="dinner-total total"></td>
+          </tr>
+          <tr class="totals calories">
+            <td>Remaining Calories:</td>
+            <td class="dinner-remaining"></td>
+          </tr>
+        </table>
+
+          <table id="lunch" class="item">
+            <caption>Lunch</caption>
+            <tr>
+              <th>Name</th>
+              <th class="calories-sort">Calories</th>
+            </tr>
+            <tr>
+              <tbody class='lunch-table'>
+              </tbody>
+              <tr class="totals calories">
+                <td>Total Calories:</td>
+                <td class="lunch-total total"></td>
+              </tr>
+              <tr class="totals calories">
+                <td>Remaining Calories:</td>
+                <td class="lunch-remaining"></td>
+              </tr>
+          </table>
+
+
+          <table id="snack" class="item">
+            <caption>Snacks</caption>
+            <tr>
+              <th>Name</th>
+              <th class="calories-sort">Calories</th>
+            </tr>
+            <tbody class='snack-table'>
+            </tbody>
+            <tr class="totals calories">
+              <td>Total Calories:</td>
+              <td class="snack-total total"></td>
+            </tr>
+            <tr class="totals calories">
+              <td>Remaining Calories:</td>
+              <td class="calories snack-remaining"></td>
+            </tr>
+          </table>
+        </section>
+        </div>
+
+
+          <table>
+            <attribute>Totals</attribute>
+            <tr class="totals calories">
+              <td>Goal Calories:</td>
+              <td class="calories daily-goal">2000</td>
+            </tr>
+            <tr class="totals calories">
+              <td>Calories Consumed:</td>
+              <td class="calories daily-total"></td>
+            </tr>
+            <tr class="totals calories">
+              <td>Remaining Calories:</td>
+              <td class="calories daily-remaining"></td>
+            </tr>
+          </table>
+
+
+
+
+
+    <script src="main.bundle.js"></script>
+    <script src="https://use.fontawesome.com/39533c56d4.js"></script>
 </body>
 
 </html>

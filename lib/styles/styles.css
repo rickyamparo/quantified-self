@@ -1,14 +1,14 @@
 * {
   font-family: Raleway;
-  font-weight: 300
+  font-weight: 300;
+  border: 1px solid black;
 }
 
 table {
     border-collapse: collapse;
-    border: 0;
 }
 
-th, td {
+table, th, td {
     border: 1px solid black;
 }
 
@@ -17,43 +17,40 @@ th {
   text-align: left;
 }
 
-.food-calories {
+#test {
+  display: flex;
+}
+#test > div {
+  flex: auto auto 20%;                /* width of first flex item in main container */
+
+}
+section {
+  align-content: center;
+  flex: 0 0 60%;                /* width of second flex item in main container */
+  display: flex;                /* nested flex container to arrange smaller items */
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+section > .item {
+  flex: 0 0 40%;                /* width of smaller items; two max per row */
+}
+.item {
+  max-width: 50%;
+    flex: 1 1 33%;
+  padding: 10%;
+  margin: 5px;
+}
+
+
+
+
+
+
+.calories {
   text-align: right;
 }
 
 .totals {
   font-weight: bold;
   background-color: darkgrey;
-}
-
-.column {
-    float: left;
-    width: 25%;
-}
-
-.column-50 {
-    float: left;
-    width: 50%;
-}
-
-.row {
-  padding-left: 20px;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.warning {
-  color: red;
-}
-
-.fa {
-  color: red;
-}
-
-.delete-cell {
-  border: none;
 }
