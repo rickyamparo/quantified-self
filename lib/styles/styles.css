@@ -3,15 +3,6 @@
   font-weight: 300
 }
 
-.container {
-  align-items: stretch;
-  grid-template-columns: 50px 50px 50px;
-  grid-template-rows: auto;
-  grid-template-areas:
-    "header header header"
-    "main breakfast lunch"
-    "main dinner snack"
-}
 
 .item-a {
   grid-area: header;
@@ -25,15 +16,12 @@
 .item-d {
   grid-area: footer;
 }
-
 .item-e {
   grid-area: breakfast;
 }
-
 .item-f {
   grid-area: dinner;
 }
-
 .item-g {
   grid-area: lunch;
 }
@@ -42,12 +30,42 @@
   grid-area: snack;
 }
 
+.container {
+  grid-gap: 20px 15px;
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: 350px 350px 350px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header header"
+    "main breakfast lunch"
+    "main dinner snack"
+    "footer footer footer"
+}
 
+@media screen and (max-width: 1196px) {
+  .container {
+    grid-auto-flow: column dense;
+    grid-gap: 20px 15px;
+    display: grid;
+    align-items: stretch;
+    grid-template-columns: 350px;
+    grid-template-areas:
+      "header"
+      "breakfast"
+      "lunch"
+      "dinner"
+      "snack"
+      "footer"
+      "main"
+  }
+}
 
 
 table {
     border-collapse: collapse;
     border: 0;
+    width: 100%;
 }
 
 th, td {
@@ -67,8 +85,6 @@ th {
   font-weight: bold;
   background-color: darkgrey;
 }
-
-
 
 .warning {
   color: red;
