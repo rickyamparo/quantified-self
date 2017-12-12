@@ -90,3 +90,7 @@ th {
 .delete-cell {
   border: none;
 }
+
+.food-table {
+  width: 400px;
+}
