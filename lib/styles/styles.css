@@ -3,25 +3,30 @@
   font-weight: 300
 }
 
-
 .item-a {
   grid-area: header;
 }
+
 .item-b {
   grid-area: main;
 }
+
 .item-c {
   grid-area: sidebar;
 }
+
 .item-d {
   grid-area: footer;
 }
+
 .item-e {
   grid-area: breakfast;
 }
+
 .item-f {
   grid-area: dinner;
 }
+
 .item-g {
   grid-area: lunch;
 }
@@ -36,11 +41,7 @@
   align-items: stretch;
   grid-template-columns: 350px 350px 350px;
   grid-template-rows: auto;
-  grid-template-areas:
-    "header header header"
-    "main breakfast lunch"
-    "main dinner snack"
-    "footer footer footer"
+  grid-template-areas: "header header header" "main breakfast lunch" "main dinner snack" "footer footer footer"
 }
 
 @media screen and (max-width: 1196px) {
@@ -50,26 +51,18 @@
     display: grid;
     align-items: stretch;
     grid-template-columns: 350px;
-    grid-template-areas:
-      "header"
-      "breakfast"
-      "lunch"
-      "dinner"
-      "snack"
-      "footer"
-      "main"
+    grid-template-areas: "header" "breakfast" "lunch" "dinner" "snack" "footer" "main"
   }
 }
 
-
 table {
-    border-collapse: collapse;
-    border: 0;
-    width: 100%;
+  border-collapse: collapse;
+  border: 0;
+  width: 100%;
 }
 
 th, td {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 th {
