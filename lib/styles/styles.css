@@ -3,6 +3,48 @@
   font-weight: 300
 }
 
+.container {
+  align-items: stretch;
+  grid-template-columns: 50px 50px 50px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "header header header"
+    "main breakfast lunch"
+    "main dinner snack"
+}
+
+.item-a {
+  grid-area: header;
+}
+.item-b {
+  grid-area: main;
+}
+.item-c {
+  grid-area: sidebar;
+}
+.item-d {
+  grid-area: footer;
+}
+
+.item-e {
+  grid-area: breakfast;
+}
+
+.item-f {
+  grid-area: dinner;
+}
+
+.item-g {
+  grid-area: lunch;
+}
+
+.item-h {
+  grid-area: snack;
+}
+
+
+
+
 table {
     border-collapse: collapse;
     border: 0;
@@ -26,25 +68,7 @@ th {
   background-color: darkgrey;
 }
 
-.column {
-    float: left;
-    width: 25%;
-}
 
-.column-50 {
-    float: left;
-    width: 50%;
-}
-
-.row {
-  padding-left: 20px;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
 
 .warning {
   color: red;
