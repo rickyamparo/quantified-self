@@ -8,9 +8,14 @@ table {
     border-collapse: collapse;
 }
 
+td.food-name {
+  width: 200px;
+}
+
 table, th, td {
     border: 1px solid black;
 }
+
 
 th {
   background-color: darkgrey;
@@ -21,11 +26,11 @@ th {
   display: flex;
 }
 #test > div {
+    align-self: flex-start;
   flex: auto auto 20%;                /* width of first flex item in main container */
 
 }
 section {
-  align-content: center;
   flex: 0 0 60%;                /* width of second flex item in main container */
   display: flex;                /* nested flex container to arrange smaller items */
   flex-wrap: wrap;
@@ -35,9 +40,9 @@ section > .item {
   flex: 0 0 40%;                /* width of smaller items; two max per row */
 }
 .item {
-  max-width: 50%;
-    flex: 1 1 33%;
-  padding: 10%;
+  max-width: 100%;
+    flex: 1 1 20%;
+  padding: 15px;
   margin: 5px;
 }
 
