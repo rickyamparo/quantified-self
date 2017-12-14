@@ -41,7 +41,10 @@
   align-items: stretch;
   grid-template-columns: 350px 350px 350px;
   grid-template-rows: auto;
-  grid-template-areas: "header header header" "main breakfast lunch" "main dinner snack" "footer footer footer"
+  grid-template-areas: "header header header"
+                       "main breakfast lunch"
+                       "main dinner snack"
+                       "footer footer footer"
 }
 
 @media screen and (max-width: 1196px) {
@@ -89,8 +92,4 @@ th {
 
 .delete-cell {
   border: none;
-}
-
-.food-table {
-  width: 400px;
 }
