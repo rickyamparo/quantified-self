@@ -3,13 +3,69 @@
   font-weight: 300
 }
 
+.item-a {
+  grid-area: header;
+}
+
+.item-b {
+  grid-area: main;
+}
+
+.item-c {
+  grid-area: sidebar;
+}
+
+.item-d {
+  grid-area: footer;
+}
+
+.item-e {
+  grid-area: breakfast;
+}
+
+.item-f {
+  grid-area: dinner;
+}
+
+.item-g {
+  grid-area: lunch;
+}
+
+.item-h {
+  grid-area: snack;
+}
+
+.container {
+  grid-gap: 20px 15px;
+  display: grid;
+  align-items: stretch;
+  grid-template-columns: 350px 350px 350px;
+  grid-template-rows: auto;
+  grid-template-areas: "header header header"
+                       "main breakfast lunch"
+                       "main dinner snack"
+                       "footer footer footer"
+}
+
+@media screen and (max-width: 1196px) {
+  .container {
+    grid-auto-flow: column dense;
+    grid-gap: 20px 15px;
+    display: grid;
+    align-items: stretch;
+    grid-template-columns: 350px;
+    grid-template-areas: "header" "breakfast" "lunch" "dinner" "snack" "footer" "main"
+  }
+}
+
 table {
-    border-collapse: collapse;
-    border: 0;
+  border-collapse: collapse;
+  border: 0;
+  width: 100%;
 }
 
 th, td {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 th {
@@ -24,26 +80,6 @@ th {
 .totals {
   font-weight: bold;
   background-color: darkgrey;
-}
-
-.column {
-    float: left;
-    width: 25%;
-}
-
-.column-50 {
-    float: left;
-    width: 50%;
-}
-
-.row {
-  padding-left: 20px;
-}
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
 }
 
 .warning {
