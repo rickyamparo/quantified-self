@@ -10781,43 +10781,10 @@
 	var $ = __webpack_require__(6);
 	var foodRequest = __webpack_require__(9);
 	var mealRequest = __webpack_require__(5);
+	var foodHelper = __webpack_require__(11);
 	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
 
 	var switcher = 1;
-
-	var sortTable = function sortTable(table, switcher) {
-	  var tableRows = 'tbody.' + table + '-table tr';
-	  var rows = $(tableRows).get();
-	  rows.sort(function (a, b) {
-	    var A = getVal(a);
-	    var B = getVal(b);
-	    if (A < B) {
-	      return -1 * switcher;
-	    }
-	    if (A > B) {
-	      return 1 * switcher;
-	    }
-	    return 0;
-	  });
-	  function getVal(element) {
-	    var v = $(element).children('td').eq(1).text().toUpperCase();
-	    if ($.isNumeric(v)) {
-	      v = parseInt(v, 10);
-	    }
-	    return v;
-	  }
-	  $.each(rows, function (index, row) {
-	    $('tbody.' + table + '-table').append(row);
-	  });
-	};
-
-	var deleteFood = function deleteFood(mealUrl) {
-	  fetch(mealUrl, { method: 'DELETE' }).then(function (response) {
-	    return console.log(response);
-	  }).catch(function (error) {
-	    console.log({ error: error });;
-	  });
-	};
 
 	var traverseFoodInMeals = function traverseFoodInMeals(id, method) {
 	  return fetch(url + 'meals', { method: 'GET' }).then(function (response) {
@@ -10837,28 +10804,33 @@
 	  meal.forEach(function (food) {
 	    if (food.id == id) {
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + id;
-	      deleteFood(mealUrl);
+	      foodRequest.deleteFood(mealUrl);
 	    }
 	  });
 	};
 
 	var eventAddFood = function eventAddFood() {
+	  var foodsUrl = url + 'foods';
 	  $('form.add-food').submit(function (event) {
 	    var name = $('input[name=food-name]').val();
 	    var calories = $('input[name=food-calories]').val();
 	    if (name === "") {
-	      alert("Please enter food name");
+	      $('div.warning').remove();
+	      $('form.add-food').append("<div class='warning'>You need to enter a Name</div>");
 	    } else if (calories === "") {
-	      alert("Please enter calories");
+	      $('div.warning').remove();
+	      $('form.add-food').append("<div class='warning'>You need to enter Calories</div>");
 	    } else {
-	      foodRequest.postFood(name, calories);
+	      $('div.warning').remove();
+	      foodRequest.postFood(name, calories, foodsUrl);
 	    }
 	    event.preventDefault();
 	  });
 	};
 
 	$(document).ready(function () {
-	  foodRequest.getFoods();
+	  foodRequest.getFoods(url + 'foods');
+	  eventAddFood();
 
 	  $('.search-input').keyup(function () {
 	    var items = $('.food-name');
@@ -10886,26 +10858,34 @@
 	  });
 
 	  $(document).on("click", "i.fa.fa-minus-circle", function () {
-	    var foodId = event.target.parentElement.parentElement.id;
-	    if (event.target.parentElement.parentElement.className == "fr") {
-	      event.target.parentElement.parentElement.remove();
+	    var foodRow = event.target.parentElement.parentElement;
+	    var foodId = foodRow.id;
+	    foodRow.remove();
+	    if (foodRow.className == "fr") {
 	      var foodUrl = url + 'foods/' + foodId;
 	      traverseFoodInMeals(foodId, deleteMealFoods);
 	      setTimeout(function () {
-	        deleteFood(foodUrl);
+	        foodRequest.deleteFood(foodUrl);
 	      }, 300);
 	    } else {
-	      event.target.parentElement.parentElement.remove();
-	      var mealId = event.target.parentElement.parentElement.className;
+	      var mealId = foodRow.className;
 	      var mealUrl = url + 'meals/' + mealId + '/foods/' + foodId;
 	      mealRequest.deleteFood(mealUrl);
 	    }
 	  });
 
+	  $(document).on("blur", "td.food-name, td.food-calories", function () {
+	    var value = event.target.textContent;
+	    var field = event.target.className.slice(5);
+	    var foodId = event.target.parentElement.id;
+	    var foodUrl = url + 'foods/' + foodId;
+	    foodRequest.editFood(foodUrl, value, field);
+	  });
+
 	  $('th.calories-sort').on('click', function () {
 	    switcher *= -1;
 	    var table = event.target.parentElement.parentElement.parentElement.id;
-	    sortTable(table, switcher);
+	    foodHelper.sortTable(table, switcher);
 	  });
 	});
 
@@ -10915,29 +10895,70 @@
 
 	'use strict';
 
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 	var $ = __webpack_require__(6);
 	var foodResponse = __webpack_require__(10);
-	var url = "https://serene-sea-75169.herokuapp.com/api/v1/";
 
-	var getFoods = function getFoods() {
-	  $.ajax({
-	    type: "GET",
-	    url: 'https://serene-sea-75169.herokuapp.com/api/v1/foods'
+	var getFoods = function getFoods(foodUrl) {
+	  fetch(foodUrl, { method: 'GET' }).then(function (response) {
+	    return response.json();
 	  }).then(foodResponse.appendBothFoods).catch(foodResponse.errorLog);
 	};
 
-	var postFood = function postFood(name, calories) {
-	  $.post('https://serene-sea-75169.herokuapp.com/api/v1/foods', {
-	    "food": {
-	      "name": name,
-	      "calories": calories
-	    }
+	var postFood = function postFood(name, calories, foodsUrl) {
+	  fetch(foodsUrl, {
+	    method: 'POST',
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      "food": {
+	        "name": name,
+	        "calories": calories
+	      }
+	    })
 	  }).then(function (response) {
-	    $('tbody#food-table').prepend('<tr><td>' + response.name + '</td> <td>' + response.calories + '</td> <td><i class="fa fa-minus-circle" aria-hidden="true"></i></td></tr>');
+	    return response.json();
+	  }).then(function (response) {
+	    return foodResponse.appendPostedFood(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });
 	  });
 	};
 
-	module.exports = { postFood: postFood, getFoods: getFoods };
+	var deleteFood = function deleteFood(foodUrl) {
+	  fetch(foodUrl, { method: 'DELETE' }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });;
+	  });
+	};
+
+	var editFood = function editFood(foodUrl, data, field) {
+	  fetch(foodUrl, {
+	    method: 'PATCH',
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json'
+	    },
+	    body: JSON.stringify({
+	      "food": _defineProperty({}, field, data)
+	    })
+	  }).then(function (response) {
+	    return console.log(response);
+	  }).catch(function (error) {
+	    console.log({ error: error });
+	  });
+	  // $.ajax({
+	  //   type: 'PATCH',
+	  //   data: {food:{[field]: data}},
+	  //   url: foodUrl
+	  // }).then(response => console.log(response))
+	};
+
+	module.exports = { postFood: postFood, getFoods: getFoods, deleteFood: deleteFood, editFood: editFood };
 
 /***/ }),
 /* 10 */
@@ -10948,6 +10969,7 @@
 	var $ = __webpack_require__(6);
 
 	var appendBothFoods = function appendBothFoods(response) {
+	  response.reverse();
 	  appendFood(response);
 	  appendFoodInMeals(response);
 	};
@@ -10964,11 +10986,53 @@
 	  });
 	};
 
+	var appendPostedFood = function appendPostedFood(response) {
+	  $('tbody#food-table').prepend('<tr class="fr" id="' + response.id + '">\n                                <td contenteditable="true" class="food-name">' + response.name + '</td>\n                                <td contenteditable="true" class="food-calories">' + response.calories + '</td>\n                                <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                </i></td></tr>');
+	};
+
 	var errorLog = function errorLog(error) {
 	  console.error(error);
 	};
 
-	module.exports = { errorLog: errorLog, appendBothFoods: appendBothFoods };
+	module.exports = { errorLog: errorLog, appendBothFoods: appendBothFoods, appendPostedFood: appendPostedFood };
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var $ = __webpack_require__(6);
+
+	var sortTable = function sortTable(table, switcher) {
+		var tableRows = 'tbody.' + table + '-table tr';
+		var rows = $(tableRows).get();
+		rows.sort(function (a, b) {
+			var A = getVal(a);
+			var B = getVal(b);
+			if (A < B) {
+				return -1 * switcher;
+			}
+			if (A > B) {
+				return 1 * switcher;
+			}
+			return 0;
+		});
+
+		function getVal(element) {
+			var v = $(element).children('td').eq(1).text().toUpperCase();
+			if ($.isNumeric(v)) {
+				v = parseInt(v, 10);
+			}
+			return v;
+		}
+
+		$.each(rows, function (index, row) {
+			$('tbody.' + table + '-table').append(row);
+		});
+	};
+
+	module.exports = { sortTable: sortTable };
 
 /***/ })
 /******/ ]);
