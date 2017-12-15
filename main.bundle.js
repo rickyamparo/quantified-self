@@ -85,7 +85,7 @@
 
 
 	// module
-	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\n.item-a {\n  grid-area: header;\n}\n.item-b {\n  grid-area: main;\n}\n.item-c {\n  grid-area: sidebar;\n}\n.item-d {\n  grid-area: footer;\n}\n\n.item-e {\n  grid-area: breakfast;\n}\n\n.item-f {\n  grid-area: dinner;\n}\n\n.item-g {\n  grid-area: lunch;\n}\n\n.item-h {\n  grid-area: snack;\n}\n\n.container {\n  grid-template-columns: 50px 50px 50px;\n  grid-template-rows: auto;\n  grid-template-areas:\n    \"header header header\"\n    \"main breakfast lunch\"\n    \"main dinner snack\"\n}\n\n\ntable {\n    border-collapse: collapse;\n    border: 0;\n}\n\nth, td {\n    border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.food-calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n\n\n.warning {\n  color: red;\n}\n\n.fa {\n  color: red;\n}\n\n.delete-cell {\n  border: none;\n}\n", ""]);
+	exports.push([module.id, "* {\n  font-family: Raleway;\n  font-weight: 300\n}\n\n.item-a {\n  grid-area: header;\n}\n\n.item-b {\n  grid-area: main;\n}\n\n.item-c {\n  grid-area: sidebar;\n}\n\n.item-d {\n  grid-area: footer;\n}\n\n.item-e {\n  grid-area: breakfast;\n}\n\n.item-f {\n  grid-area: dinner;\n}\n\n.item-g {\n  grid-area: lunch;\n}\n\n.item-h {\n  grid-area: snack;\n}\n\n.container {\n  grid-gap: 20px 15px;\n  display: grid;\n  align-items: stretch;\n  grid-template-columns: 350px 350px 350px;\n  grid-template-rows: auto;\n  grid-template-areas: \"header header header\"\n                       \"main breakfast lunch\"\n                       \"main dinner snack\"\n                       \"footer footer footer\"\n}\n\n@media screen and (max-width: 1196px) {\n  .container {\n    grid-auto-flow: column dense;\n    grid-gap: 20px 15px;\n    display: grid;\n    align-items: stretch;\n    grid-template-columns: 350px;\n    grid-template-areas: \"header\" \"breakfast\" \"lunch\" \"dinner\" \"snack\" \"footer\" \"main\"\n  }\n}\n\ntable {\n  border-collapse: collapse;\n  border: 0;\n  width: 100%;\n}\n\nth, td {\n  border: 1px solid black;\n}\n\nth {\n  background-color: darkgrey;\n  text-align: left;\n}\n\n.food-calories {\n  text-align: right;\n}\n\n.totals {\n  font-weight: bold;\n  background-color: darkgrey;\n}\n\n.warning {\n  color: red;\n}\n\n.fa {\n  color: red;\n}\n\n.delete-cell {\n  border: none;\n}\n", ""]);
 
 	// exports
 
@@ -405,7 +405,7 @@
 	'use strict';
 
 	var $ = __webpack_require__(6);
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
+	var url = 'https://frozen-spire-42397.herokuapp.com/api/v1/';
 	var mealResponse = __webpack_require__(7);
 
 	var requestMeals = function requestMeals(method, id) {
@@ -10723,6 +10723,7 @@
 	};
 
 	var appendMeals = function appendMeals(meals) {
+	  console.log(meals);
 	  var mealName = meals.name.toLowerCase();
 	  var table = $('.' + mealName + '-table');
 	  table.empty();
@@ -10737,7 +10738,7 @@
 	  var calories = 0;
 	  meals.foods.forEach(function (food) {
 	    table.append('\n      <tr class="' + meals.id + '" id="' + food.id + '"><td>' + food.name + '</td>\n      <td class="food-calories">' + food.calories + '</td>\n      <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n      </i></td></tr>');
-	    calories += food.calories;
+	    calories += parseInt(food.calories);
 	  });
 	  return calories;
 	};
@@ -10782,7 +10783,7 @@
 	var foodRequest = __webpack_require__(9);
 	var mealRequest = __webpack_require__(5);
 	var foodHelper = __webpack_require__(11);
-	var url = 'https://serene-sea-75169.herokuapp.com/api/v1/';
+	var url = 'https://frozen-spire-42397.herokuapp.com/api/v1/';
 
 	var switcher = 1;
 
@@ -10976,18 +10977,18 @@
 
 	var appendFood = function appendFood(response) {
 	  response.forEach(function (data) {
-	    $('tbody#food-table').append('<tr class="fr" id="' + data.id + '">\n                                  <td contenteditable="true" class="food-name">' + data.name + '</td>\n                                  <td contenteditable="true" class="food-calories">' + data.calories + '</td>\n                                  <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                  </i></td></tr>');
+	    $('tbody#food-table').append('<tr class="fr" id="' + data.id + '">\n                                  <td contenteditable="true" class="food-name">' + data.name + '</td>\n                                  <td contenteditable="true" class="food-calories">' + data.calories + '</td>\n                                  <td class="delete-cell" align="center"><i tabindex="0" class="fa fa-minus-circle" aria-hidden="true">\n                                  </i></td></tr>');
 	  });
 	};
 
 	var appendFoodInMeals = function appendFoodInMeals(response) {
 	  response.forEach(function (data) {
-	    $('.diary-food-table').append('<tr class="fr" id="' + data.id + '">\n                                   <td><input type="checkbox" class="meal-checkbox"></td>\n                                   <td class="food-name">' + data.name + '</td>\n                                   <td class="food-calories">' + data.calories + '</td>\n                                   <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                   </i></td></tr>');
+	    $('.diary-food-table').append('<tr class="fr" id="' + data.id + '">\n                                   <td><input type="checkbox" class="meal-checkbox"></td>\n                                   <td class="food-name">' + data.name + '</td>\n                                   <td class="food-calories">' + data.calories + '</td>\n                                   <td class="delete-cell" align="center"><i tabindex="0" class="fa fa-minus-circle" aria-hidden="true">\n                                   </i></td></tr>');
 	  });
 	};
 
 	var appendPostedFood = function appendPostedFood(response) {
-	  $('tbody#food-table').prepend('<tr class="fr" id="' + response.id + '">\n                                <td contenteditable="true" class="food-name">' + response.name + '</td>\n                                <td contenteditable="true" class="food-calories">' + response.calories + '</td>\n                                <td class="delete-cell" align="center"><i class="fa fa-minus-circle" aria-hidden="true">\n                                </i></td></tr>');
+	  $('tbody#food-table').prepend('<tr class="fr" id="' + response.id + '">\n                                <td contenteditable="true" class="food-name">' + response.name + '</td>\n                                <td contenteditable="true" class="food-calories">' + response.calories + '</td>\n                                <td class="delete-cell" align="center"><i tab index="0" class="fa fa-minus-circle" aria-hidden="true">\n                                </i></td></tr>');
 	};
 
 	var errorLog = function errorLog(error) {
